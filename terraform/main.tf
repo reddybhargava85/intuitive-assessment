@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 0.13"
+}
+
 locals {
   org-name  = "my-org"
   dept-name = "my-dept"
