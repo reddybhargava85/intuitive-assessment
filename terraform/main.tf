@@ -20,7 +20,7 @@ resource "azurerm_resource_group" "rg" {
 module "storage" {
   source = "./module/storage"
 
-  sa-name                  = "${var.sa-name}-${random_string.stg-random.id}"
+  sa-name                  = "${var.sa-name}${random_string.stg-random.result}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = var.region
   account_tier             = var.account_tier
@@ -37,7 +37,7 @@ module "network" {
   address_space       = var.address_space
 
   address_prefixes = var.address_prefixes
-  vm-count = var.vm-count
+  vm-count         = var.vm-count
 
   common-tags = local.common-tags
 }
@@ -45,8 +45,8 @@ module "network" {
 module "compute" {
   source = "./module/compute"
 
-  vm-count = var.vm-count
-  nics = module.network.nics
+  vm-count            = var.vm-count
+  nics                = module.network.nics
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.region
 }

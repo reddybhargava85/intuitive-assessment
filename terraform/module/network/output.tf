@@ -3,5 +3,5 @@ output "vnet-name" {
 }
 
 output "nics" {
-  value = toset(values(azurerm_network_interface.netowrk-interface)[*].id)
+  value = [for nic in azurerm_network_interface.network-interface : nic.id]
 }

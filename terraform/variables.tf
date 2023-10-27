@@ -1,34 +1,34 @@
 variable "region" {
-    type = string
+  type = string
 }
 variable "rg-name" {
-    type = string
+  type = string
 }
 
 #Storage Account vars
 variable "sa-name" {
-    type = string
+  type = string
 }
 variable "account_tier" {
-    type = string
+  type = string
 }
 variable "account_replication_type" {
-    type = string
+  type = string
 }
 
 #Vairtual Nework vars
 variable "vnet-name" {
-    type = string
+  type = string
 }
-variable "address_space"  {
-    type = list(string)
+variable "address_space" {
+  type = list(string)
 }
 
 variable "address_prefixes" {
-  type = list
+  type = list(any)
 }
 
 variable "vm-count" {
-  type = number
+  type    = number
   default = 2
 }
