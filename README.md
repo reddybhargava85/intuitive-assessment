@@ -34,11 +34,3 @@ Make sure you have the necessary Azure permissions and have logged in using the 
 License
 This project is licensed under the MIT License. Feel free to modify and adapt the script to suit your requirements.
 
-Feel free to expand on this section or include additional details, such as troubleshooting tips, examples of how to run the script, or any specific use cases it is designed for.
-
-
-
-
-
-
-Regenerate
