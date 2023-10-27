@@ -1,0 +1,65 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    
+env:
+  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+  ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+  ARM_CLIENT_SECRET: "${{ secrets.AZURE_CLIENT_SECRET }}" 
+
+   
+jobs:
+
+  scan:
+    name: scan
+    uses: ./.github/workflows/tfsec.yml
+    secrets: inherit
+    
+  development:
+    name: 'Terraform(development)'
+    runs-on: ubuntu-latest
+    environment: dev
+
+    defaults:
+      run:
+        working-directory: ./terraform
+        shell: bash    
+  
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.6.2 # Use the desired Terraform version
+      
+    - name: Install TFLint
+      run: |
+        wget https://github.com/terraform-linters/tflint/releases/latest/download/tflint_linux_amd64.zip
+        unzip tflint_linux_amd64.zip
+        chmod +x tflint
+        sudo mv tflint /usr/local/bin/
+        rm tflint_linux_amd64.zip
+      if: runner.os == 'Linux'
+
+    - name: TFLint
+      run: tflint
+
+    - name: Terraform Init
+      run: terraform init
+      
+    - name: Terraform Plan
+      run: terraform plan -input=false -var-file ./dev/terraform.tfvars -out=tfplan
+
+    - name: Deploy to Azure
+      run: terraform apply -auto-approve tfplan
+
+    # - name: Cleanup
+    #   run: terraform destroy -auto-approve -input=false -var-file ./dev/terraform.tfvars
+
+  # Add additional jobs or steps for other workflows as needed
